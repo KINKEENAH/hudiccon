@@ -1,43 +1,9 @@
-// const Navbar = () => {
-//   return (
-//     <section className="w-full bg-white shadow">
-//       <nav className="max-w-6xl mx-auto px-6">
-//         <div className="flex items-center justify-between h-20">
-//           {/* left item */}
-//           <div className="font-semibold">Hudiccon</div>
-
-//           {/* right group */}
-//           <div className="hiddden md:flex space-x-8 items-center">
-//             <a href="#" className="text-gray-700 hover:text-blue-700 font-meduim">Events</a>
-//             <a href="#"  className="text-gray-700 hover:text-blue-700 font-meduim">Department &amp; Staff</a>
-//             <a href="#"  className="text-gray-700 hover:text-blue-700 font-meduim">Projects</a>
-//             <a href="#"  className="text-gray-700 hover:text-blue-700 font-meduim">Blogs</a>
-//             <a href="#"  className="text-gray-700 hover:text-blue-700 font-meduim">Merchandise</a>
-//             <a href="#"  className="text-gray-700 hover:text-blue-700 font-meduim">Contact us</a>
-            
-//           </div>
-//           <div className="hidden md:flex space-x-8 items-center">
-//             <button className="bg-blue-600 text-white  font-bold px-4 py-2 rounded">
-//               Sign in
-//             </button>
-//           </div>
-//         </div>
-//       </nav>
-      
-
-   
-  
-
-//     </section>
-//   );
-// };
-// export default Navbar;
-
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { HiMenu, HiX } from "react-icons/hi";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef(null); // points to mobile menu + icon area
 
   const navItems = [
     "Events",
@@ -48,8 +14,25 @@ const Navbar = () => {
     "Contact us",
   ];
 
+  // Close when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
+
   return (
-    <nav className="w-full bg-white shadow">
+    <nav className="w-full bg-white shadow" ref={menuRef}>
       <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
         {/* Logo */}
         <div className="font-semibold text-xl">Hudiccon</div>
@@ -72,7 +55,10 @@ const Navbar = () => {
         </div>
 
         {/* Hamburger Icon - Mobile only */}
-        <div className="md:hidden cursor-pointer" onClick={() => setIsOpen(!isOpen)}>
+        <div
+          className="md:hidden cursor-pointer"
+          onClick={() => setIsOpen(!isOpen)}
+        >
           {isOpen ? <HiX size={28} /> : <HiMenu size={28} />}
         </div>
       </div>
@@ -85,12 +71,16 @@ const Navbar = () => {
               key={item}
               href="#"
               className="block text-gray-700 hover:text-blue-700 font-medium"
+              onClick={() => setIsOpen(false)} // close on link click
             >
               {item}
             </a>
           ))}
 
-          <button className="w-full bg-blue-600 text-white px-4 py-2 rounded font-bold mt-2">
+          <button
+            className="w-full bg-blue-600 text-white px-4 py-2 rounded font-bold mt-2"
+            onClick={() => setIsOpen(false)} // also close on sign-in click
+          >
             Sign in
           </button>
         </div>
