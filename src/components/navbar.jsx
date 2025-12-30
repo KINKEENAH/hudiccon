@@ -4,21 +4,16 @@ import { HiMenu, HiX } from "react-icons/hi";
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef(null); // points to mobile menu + icon area
-  
 
   const navItems = [
-    "Events",
-    "Department & Staff",
-    "Projects",
-    "Blogs",
-    "Merchandise",
-    "Contact us",
+    { label: "About", href: "#who-we-are" },
+    { label: "Mission", href: "#mission" },
+    { label: "What we do", href: "#what-we-do" },
+    { label: "Blogs", href: "#blogs" },
+    { label: "Merchandise", href: "#merchandise" },
+    { label: "Contact us", href: "#contact" },
   ];
-  
-  
 
-  
-  
   // Close when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -36,22 +31,52 @@ const Navbar = () => {
     };
   }, [isOpen]);
 
+  // Smooth scroll handler
+  const handleSmoothScroll = (e, href) => {
+    e.preventDefault();
+    setIsOpen(false); // Close mobile menu
+
+    const element = document.querySelector(href);
+    if (element) {
+      const navbarHeight = 80; // Height of your fixed navbar
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition =
+        elementPosition + window.pageYOffset - navbarHeight;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
+    }
+  };
+
   return (
     <section>
-      <nav className="w-full bg-white shadow" ref={menuRef}>
+      <nav className="w-full bg-white shadow scroll-smooth" ref={menuRef}>
         <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
           {/* Logo */}
           <div className="font-semibold text-xl">Hudiccon</div>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex space-x-8 items-center">
-            {navItems.map((item) => (
+            {/* {navItems.map((item) => (
               <a
                 key={item}
                 href="#"
                 className="text-gray-700 hover:text-blue-700 font-medium"
               >
                 {item}
+              </a>
+            ))} */}
+            {navItems.map((item) => (
+              <a
+                key={item.label}
+                href={item.href}
+                onClick={(e) => handleSmoothScroll(e, item.href)}
+                // closes mobile menu
+                className="cursor-pointer hover:text-green-700 transition"
+              >
+                {item.label}
               </a>
             ))}
 
@@ -74,12 +99,12 @@ const Navbar = () => {
           <div className="md:hidden bg-white shadow-lg px-6 pb-4 space-y-4">
             {navItems.map((item) => (
               <a
-                key={item}
-                href="#"
+                key={item.label}
+                href={item.href}
                 className="block text-gray-700 hover:text-blue-700 font-medium"
-                onClick={() => setIsOpen(false)} // close on link click
+                onClick={(e) => handleSmoothScroll(e, item.href)}// close on link click
               >
-                {item}
+                {item.label}
               </a>
             ))}
 
@@ -92,71 +117,6 @@ const Navbar = () => {
           </div>
         )}
       </nav>
-
-      {/* <footer>
-        <div className="flex flex-row">
-        <div>
-          <h1>Subscribe to our Newsletter</h1>
-          <h2>Stay updated with our latest news, events, and resources</h2>
-        </div>
-        <div>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email"
-            className="border px-2 py-1 rounded"
-          />
-        </div>
-        <div>
-          <button className="bg-blue-600 text-white px-4 py-2 rounded font-bold">
-            Subscribe
-          </button>
-        </div>
-        </div>
-        <div className="border-x-1"></div>
-        <div className="flex flex-row">
-          <div>
-            <div className="font-semibold text-xl">Hudiccon</div>
-            <p>empowering students to explore,<br/>learn and innovate in the world of  <br/>computer science. </p>
-          </div>
-          <div className="flex-col">
-            {supportItems.map((item) => (
-              <a
-                key={item}
-                href="#"
-                className="text-gray-700 flex "
-              >
-                {item}
-              </a>
-            ))}
-          </div>
-          <div className="flex-col">
-            {resourceItems.map((item) => (
-              <a
-                key={item}
-                href="#"
-                className="text-gray-700 flex "
-              >
-                {item}
-              </a>
-            ))}
-          </div>
-          <div className="flex-col">
-            {contactItems.map((item) => (
-              <a
-                key={item}
-                href="#"
-                className="text-gray-700 flex "
-              >
-                {item}
-              </a>
-            ))}
-          </div>
-        </div>
-      </footer> */}
-
-
     </section>
   );
 };

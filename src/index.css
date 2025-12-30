@@ -70,3 +70,28 @@ button:focus-visible {
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+/* Smooth scrolling for the entire app */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px; /* Prevents content from hiding under fixed navbar */
+}
+
+/* Optional: Custom scrollbar styling */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3b82f6;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2563eb;
+}
